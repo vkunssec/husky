@@ -15,10 +15,10 @@ var initCmd = &cobra.Command{
 	Short: "Initialize husky",
 	Long: `Initialize husky in the current directory.
 	
-Este comando irá:
-- Criar o arquivo de configuração husky.yaml
-- Configurar a estrutura básica de hooks
-- Preparar o ambiente git`,
+This command will:
+- Create the husky.yaml configuration file
+- Configure the basic hook structure
+- Prepare the git environment`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if !quiet {
 			lib.LogInfo("Initializing Husky...")
@@ -35,6 +35,11 @@ Este comando irá:
 			return
 		}
 
+		if err := lib.Install(); err != nil {
+			lib.LogError("❌ Error installing hooks: %v\n", err)
+			return
+		}
+
 		if !quiet {
 			lib.LogInfo("✅ Husky initialized successfully!")
 		}
@@ -42,7 +47,7 @@ Este comando irá:
 }
 
 func init() {
-	initCmd.Flags().BoolVarP(&quiet, "quiet", "q", false, "Modo silencioso")
+	initCmd.Flags().BoolVarP(&quiet, "quiet", "q", false, "Silent mode")
 	initCmd.Flags().BoolVarP(&force, "force", "f", false, "Force initialization")
 	rootCmd.AddCommand(initCmd)
 }

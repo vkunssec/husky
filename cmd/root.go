@@ -14,16 +14,16 @@ var (
 		Use:     "husky",
 		Version: version,
 		Short:   "Git hooks manager",
-		Long: `Husky é um gerenciador de Git hooks que permite configurar e gerenciar 
-seus hooks de forma simples e eficiente.
+		Long: `Husky is a Git hooks manager that allows you to configure and manage 
+your hooks in a simple and efficient way.
 
-Características principais:
-- Configuração via arquivo yaml/json
-- Suporte a múltiplos hooks
-- Fácil instalação e uso
-- Compatível com todos os sistemas operacionais
+Main features:
+- Configuration via yaml/json file
+- Support for multiple hooks
+- Easy installation and usage
+- Compatible with all operating systems
 
-Para mais informações visite: https://github.com/vkunssec/husky`,
+For more information visit: https://github.com/vkunssec/husky`,
 	}
 )
 

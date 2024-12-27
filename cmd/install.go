@@ -10,10 +10,10 @@ var installCmd = &cobra.Command{
 	Short: "Install husky",
 	Long: `Install husky in the current directory.
 	
-Este comando irá:
-- Verificar pré-requisitos
-- Instalar os hooks configurados
-- Configurar os scripts git`,
+This command will:
+- Check prerequisites
+- Install the configured hooks
+- Configure the git scripts`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := lib.Install(); err != nil {
 			lib.LogError("❌ Error installing Husky: %v\n", err)
