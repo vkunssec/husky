@@ -13,7 +13,7 @@ type InstallOptions struct {
 }
 
 // Install installs husky git hooks by copying them from husky hooks directory to git hooks directory
-func Install(opts InstallOptions) error {
+func install(opts InstallOptions) error {
 	if !opts.Quiet {
 		tools.LogInfo("Installing husky")
 	}

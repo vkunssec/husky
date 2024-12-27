@@ -10,8 +10,14 @@ import (
 	"github.com/vkunssec/husky/internal/tools"
 )
 
-// Add adds a hook to the husky hooks directory
-func Add(hook string, cmd string) error {
+// Declare variables that point to the implementations
+var (
+	Add     = add
+	Install = install
+)
+
+// add is the implementation of the Add function
+func add(hook string, cmd string) error {
 	if !tools.IsValidHook(hook) {
 		return errors.New("invalid hook")
 	}

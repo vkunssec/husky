@@ -17,21 +17,21 @@ func TestInitCmd(t *testing.T) {
 		force   bool
 	}{
 		{
-			name:    "Execução com modo silencioso",
+			name:    "Execution with silent mode",
 			args:    []string{"--quiet"},
 			wantErr: false,
 			quiet:   true,
 			force:   false,
 		},
 		{
-			name:    "Execução com force",
+			name:    "Execution with force",
 			args:    []string{"--force"},
 			wantErr: false,
 			quiet:   false,
 			force:   true,
 		},
 		{
-			name:    "Execução normal",
+			name:    "Normal execution",
 			args:    []string{},
 			wantErr: false,
 			quiet:   false,

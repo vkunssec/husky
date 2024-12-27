@@ -21,17 +21,17 @@ func TestRootCmd(t *testing.T) {
 
 func TestExecute(t *testing.T) {
 	t.Run("should execute without error", func(t *testing.T) {
-		// Captura a saída do comando
+		// Capture command output
 		oldOut := rootCmd.OutOrStdout()
 		defer func() { rootCmd.SetOut(oldOut) }()
 
 		buf := new(bytes.Buffer)
 		rootCmd.SetOut(buf)
 
-		// Executa o comando
+		// Execute command
 		Execute()
 
-		// Verifica se não houve erro (se houvesse, o programa teria terminado com os.Exit(1))
+		// Verify if there was no error (if there was, the program would have exited with os.Exit(1))
 		assert.NotPanics(t, func() { Execute() })
 	})
 }
