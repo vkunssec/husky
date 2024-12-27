@@ -53,21 +53,25 @@ jobs:
       actions: read
       pull-requests: write
     steps:
-      # Primeiro, precisamos fazer checkout do código
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      # Baixar o artefato de cobertura
       - name: Download coverage artifact
         uses: actions/download-artifact@v4
         with:
           name: code-coverage
-          
-      # Usar a action de cobertura
+
       - uses: fgrosse/go-coverage-report@v1.1.1
         with:
           coverage-artifact-name: "code-coverage"
           coverage-file-name: "coverage.txt"
           fail-on-error: false
+          go-module-path: "github.com/vkunssec/husky"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Debug - List changed files
+        run: |
+          git diff --name-only origin/${{ github.base_ref }}
