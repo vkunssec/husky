@@ -1,23 +1,35 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/vkunssec/husky/internal/lib"
 )
 
 var (
+	version = "0.0.4"
+
 	rootCmd = &cobra.Command{
-		Use:   "husky",
-		Short: "Git hooks manager",
-		Long:  "Git hooks manager. Manage your git hooks with ease. https://github.com/vkunssec/husky",
+		Use:     "husky",
+		Version: version,
+		Short:   "Git hooks manager",
+		Long: `Husky é um gerenciador de Git hooks que permite configurar e gerenciar 
+seus hooks de forma simples e eficiente.
+
+Características principais:
+- Configuração via arquivo yaml/json
+- Suporte a múltiplos hooks
+- Fácil instalação e uso
+- Compatível com todos os sistemas operacionais
+
+Para mais informações visite: https://github.com/vkunssec/husky`,
 	}
 )
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		lib.LogError("❌ Error executing command: %v\n", err)
 		os.Exit(1)
 	}
 }

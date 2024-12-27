@@ -6,25 +6,35 @@ import (
 )
 
 var validHooks = []string{
+	// Hooks de commit
 	"pre-commit",
-	"pre-push",
-	"pre-merge",
-	"pre-rebase",
-	"pre-merge-commit",
-	"pre-rebase-commit",
-	"pre-commit-msg",
-	"post-commit",
-	"post-merge",
-	"post-rebase",
-	"post-merge-commit",
-	"post-rebase-commit",
-	"update",
 	"prepare-commit-msg",
 	"commit-msg",
-	"post-checkout",
+	"post-commit",
+	"post-commit-msg",
+
+	// Hooks de merge
+	"pre-merge",
+	"pre-merge-commit",
+	"post-merge",
+	"post-merge-commit",
+
+	// Hooks de rebase
+	"pre-rebase",
+	"pre-rebase-commit",
+	"post-rebase",
+	"post-rebase-commit",
+
+	// Hooks de push
+	"pre-push",
+	"update",
+
+	// Hooks de patch
 	"pre-applypatch",
 	"post-applypatch",
-	"post-commit-msg",
+
+	// Outros hooks
+	"post-checkout",
 }
 
 // IsValidHook checks if the hook is valid
@@ -71,4 +81,23 @@ func GetGitHooksDir(relative bool) string {
 		return ""
 	}
 	return path.Join(cwd, ".git", "hooks")
+}
+
+// IsCI verifica se está rodando em um ambiente de CI
+func IsCI() bool {
+	ciEnvVars := []string{
+		"CI",
+		"TRAVIS",
+		"CIRCLECI",
+		"GITHUB_ACTIONS",
+		"GITLAB_CI",
+		"JENKINS_URL",
+	}
+
+	for _, env := range ciEnvVars {
+		if os.Getenv(env) != "" {
+			return true
+		}
+	}
+	return false
 }

@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 	"github.com/vkunssec/husky/internal/lib"
 )
@@ -10,12 +8,19 @@ import (
 var installCmd = &cobra.Command{
 	Use:   "install",
 	Short: "Install husky",
-	Long:  "Install husky in the current directory",
+	Long: `Install husky in the current directory.
+	
+Este comando irá:
+- Verificar pré-requisitos
+- Instalar os hooks configurados
+- Configurar os scripts git`,
 	Run: func(cmd *cobra.Command, args []string) {
-		err := lib.Install()
-		if err != nil {
-			fmt.Println(err)
+		if err := lib.Install(); err != nil {
+			lib.LogError("❌ Error installing Husky: %v\n", err)
+			return
 		}
+
+		lib.LogInfo("✅ Husky installed successfully!")
 	},
 }
 

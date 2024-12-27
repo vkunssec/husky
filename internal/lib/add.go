@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"strings"
 )
 
 // Add adds a hook to the husky hooks directory
@@ -26,7 +27,7 @@ func Add(hook string, cmd string) error {
 	// check if .husky/hooks exists
 	_, err := os.Stat(GetHuskyHooksDir(true))
 	if os.IsNotExist(err) {
-		fmt.Println("no pre-existing hooks found")
+		LogInfo("no pre-existing hooks found")
 
 		// create .husky/hooks
 		err = os.MkdirAll(GetHuskyHooksDir(true), 0755)
@@ -34,7 +35,18 @@ func Add(hook string, cmd string) error {
 			return err
 		}
 
-		fmt.Println("created .husky/hooks")
+		LogInfo("created .husky/hooks")
+	}
+
+	// check if hook already exists
+	if _, err := os.Stat(path.Join(GetHuskyHooksDir(true), hook)); err == nil {
+		// ask if user wants to overwrite
+		fmt.Printf("Hook '%s' already exists. Do you want to overwrite it? [y/N] ", hook)
+		var response string
+		fmt.Scanln(&response)
+		if response != "y" && response != "Y" {
+			return fmt.Errorf("operation cancelled by user")
+		}
 	}
 
 	// create hook
@@ -43,13 +55,25 @@ func Add(hook string, cmd string) error {
 		return err
 	}
 
-	//goland:noinspection GoUnhandledErrorResult
 	defer file.Close()
 
-	cmd = "#!/bin/sh\n" + cmd
+	if cmd == "" {
+		return errors.New("command cannot be empty")
+	}
+
+	// Add shebang only if it doesn't exist
+	if !strings.HasPrefix(cmd, "#!/") {
+		cmd = "#!/bin/sh\n" + cmd
+	}
+
 	_, err = file.WriteString(cmd)
 	if err != nil {
 		return err
+	}
+
+	// Add execution permission to the file
+	if err := os.Chmod(path.Join(GetHuskyHooksDir(true), hook), 0755); err != nil {
+		return fmt.Errorf("failed to set hook permissions: %w", err)
 	}
 
 	return nil
