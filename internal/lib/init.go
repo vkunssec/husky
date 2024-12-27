@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"path"
-	"time"
 )
 
 // InitOptions are the options for the init command
@@ -20,13 +19,6 @@ func Init(opts InitOptions) error {
 	// Validate environment
 	if err := validateEnvironment(!opts.Force); err != nil {
 		return fmt.Errorf("environment validation failed: %w", err)
-	}
-
-	// Create backup if enabled
-	if opts.Config.BackupEnabled {
-		if err := createBackup(); err != nil {
-			LogError("Failed to create backup: %v", err)
-		}
 	}
 
 	// Create husky directory structure
@@ -106,46 +98,4 @@ func cleanup(dir string) {
 	if err := os.RemoveAll(dir); err != nil {
 		LogError("Failed to cleanup directory: %v", err)
 	}
-}
-
-// createBackup creates a backup of the current git hooks
-func createBackup() error {
-	// Get source and destination directories
-	sourceDir := GetGitHooksDir(true)
-	backupDir := path.Join(GetHuskyHooksDir(true), "backup", fmt.Sprintf("hooks_%d", time.Now().Unix()))
-
-	// Create backup directory
-	if err := os.MkdirAll(backupDir, 0755); err != nil {
-		return fmt.Errorf("failed to create backup directory: %w", err)
-	}
-
-	// Read all files from the hooks directory
-	entries, err := os.ReadDir(sourceDir)
-	if err != nil {
-		return fmt.Errorf("failed to read hooks directory: %w", err)
-	}
-
-	// Copy each hook to the backup directory
-	for _, entry := range entries {
-		if entry.IsDir() {
-			continue // Skip directories
-		}
-
-		sourcePath := path.Join(sourceDir, entry.Name())
-		destPath := path.Join(backupDir, entry.Name())
-
-		// Read source file
-		content, err := os.ReadFile(sourcePath)
-		if err != nil {
-			return fmt.Errorf("failed to read hook %s: %w", entry.Name(), err)
-		}
-
-		// Write to backup file
-		if err := os.WriteFile(destPath, content, 0755); err != nil {
-			return fmt.Errorf("failed to write backup of hook %s: %w", entry.Name(), err)
-		}
-	}
-
-	LogInfo("Backup of hooks created in: %s", backupDir)
-	return nil
 }
