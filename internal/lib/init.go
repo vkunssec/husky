@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"path"
+
+	"github.com/vkunssec/husky/internal/tools"
 )
 
 // InitOptions are the options for the init command
@@ -33,17 +35,17 @@ func Init(opts InitOptions) error {
 		return fmt.Errorf("failed to install default hooks: %w", err)
 	}
 
-	LogInfo("Husky initialized successfully")
+	tools.LogInfo("Husky initialized successfully")
 	return nil
 }
 
 // validateEnvironment validates the environment
 func validateEnvironment(checkExisting bool) error {
-	if !GitExists() {
+	if !tools.GitExists() {
 		return errors.New("git repository not initialized")
 	}
 
-	if checkExisting && HuskyExists() {
+	if checkExisting && tools.HuskyExists() {
 		return errors.New("husky already initialized")
 	}
 
@@ -52,7 +54,7 @@ func validateEnvironment(checkExisting bool) error {
 
 // createHuskyStructure creates the husky directory structure
 func createHuskyStructure(config *HuskyConfig) (string, error) {
-	huskyDir := GetHuskyHooksDir(true)
+	huskyDir := tools.GetHuskyHooksDir(true)
 
 	if err := os.MkdirAll(huskyDir, config.DefaultPermissions); err != nil {
 		return "", fmt.Errorf("failed to create directory: %w", err)
@@ -96,6 +98,6 @@ func createHook(dir, name, content string, config *HuskyConfig) error {
 // cleanup cleans up the husky directory
 func cleanup(dir string) {
 	if err := os.RemoveAll(dir); err != nil {
-		LogError("Failed to cleanup directory: %v", err)
+		tools.LogError("Failed to cleanup directory: %v", err)
 	}
 }

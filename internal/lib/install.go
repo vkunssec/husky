@@ -4,25 +4,27 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+
+	"github.com/vkunssec/husky/internal/tools"
 )
 
 // Install installs husky git hooks by copying them from husky hooks directory to git hooks directory
 func Install() error {
-	LogInfo("Installing husky")
+	tools.LogInfo("Installing husky")
 
 	// Check if git is installed in the system
-	if !GitExists() {
+	if !tools.GitExists() {
 		return errors.New("git is not installed")
 	}
 
 	// Check if husky is installed in the project
-	if !HuskyExists() {
+	if !tools.HuskyExists() {
 		return errors.New("husky is not installed")
 	}
 
 	// Get the paths for git hooks and husky hooks directories
-	gitHooksDir := GetGitHooksDir(true)
-	huskyHooksDir := GetHuskyHooksDir(true)
+	gitHooksDir := tools.GetGitHooksDir(true)
+	huskyHooksDir := tools.GetHuskyHooksDir(true)
 
 	// Verify if husky hooks directory exists
 	_, err := os.Stat(huskyHooksDir)
@@ -60,7 +62,7 @@ func Install() error {
 			continue
 		}
 
-		LogInfo(hook)
+		tools.LogInfo(hook)
 
 		// Create a hard link from husky hook to git hooks directory
 		err = os.Link(hook, filepath.Join(gitHooksDir, filepath.Base(hook)))
@@ -74,7 +76,7 @@ func Install() error {
 			return err
 		}
 	}
-	LogInfo("Hooks installed")
+	tools.LogInfo("Hooks installed")
 
 	return nil
 }

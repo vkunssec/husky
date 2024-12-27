@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/vkunssec/husky/internal/lib"
+	"github.com/vkunssec/husky/internal/tools"
 )
 
 var installCmd = &cobra.Command{
@@ -16,11 +17,11 @@ This command will:
 - Configure the git scripts`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := lib.Install(); err != nil {
-			lib.LogError("❌ Error installing Husky: %v\n", err)
+			tools.LogError("❌ Error installing Husky: %v\n", err)
 			return
 		}
 
-		lib.LogInfo("✅ Husky installed successfully!")
+		tools.LogInfo("✅ Husky installed successfully!")
 	},
 }
 

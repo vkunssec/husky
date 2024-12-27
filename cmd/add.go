@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/vkunssec/husky/internal/lib"
+	"github.com/vkunssec/husky/internal/tools"
 )
 
 var addCmd = &cobra.Command{
@@ -16,16 +17,16 @@ var addCmd = &cobra.Command{
 		cmdStr := args[1]
 
 		if err := lib.Add(hook, cmdStr); err != nil {
-			lib.LogError("❌ Error adding hook: %v\n", err)
+			tools.LogError("❌ Error adding hook: %v\n", err)
 			return
 		}
 
 		if err := lib.Install(); err != nil {
-			lib.LogError("❌ Error installing hooks: %v\n", err)
+			tools.LogError("❌ Error installing hooks: %v\n", err)
 			return
 		}
 
-		lib.LogInfo("✅ Hook '%s' added successfully!\n", hook)
+		tools.LogInfo("✅ Hook '%s' added successfully!\n", hook)
 	},
 }
 

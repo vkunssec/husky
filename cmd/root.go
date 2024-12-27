@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/vkunssec/husky/internal/lib"
+	"github.com/vkunssec/husky/internal/tools"
 )
 
 var (
@@ -29,7 +29,7 @@ For more information visit: https://github.com/vkunssec/husky`,
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		lib.LogError("❌ Error executing command: %v\n", err)
+		tools.LogError("❌ Error executing command: %v\n", err)
 		os.Exit(1)
 	}
 }

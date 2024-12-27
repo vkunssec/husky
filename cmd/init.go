@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/vkunssec/husky/internal/lib"
+	"github.com/vkunssec/husky/internal/tools"
 )
 
 var (
@@ -21,7 +22,7 @@ This command will:
 - Prepare the git environment`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if !quiet {
-			lib.LogInfo("Initializing Husky...")
+			tools.LogInfo("Initializing Husky...")
 		}
 
 		opts := lib.InitOptions{
@@ -31,17 +32,17 @@ This command will:
 		}
 
 		if err := lib.Init(opts); err != nil {
-			lib.LogError("❌ Error initializing Husky: %v\n", err)
+			tools.LogError("❌ Error initializing Husky: %v\n", err)
 			return
 		}
 
 		if err := lib.Install(); err != nil {
-			lib.LogError("❌ Error installing hooks: %v\n", err)
+			tools.LogError("❌ Error installing hooks: %v\n", err)
 			return
 		}
 
 		if !quiet {
-			lib.LogInfo("✅ Husky initialized successfully!")
+			tools.LogInfo("✅ Husky initialized successfully!")
 		}
 	},
 }
