@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	version = "0.0.4"
+	version = "0.0.8"
 
 	rootCmd = &cobra.Command{
 		Use:     "husky",
