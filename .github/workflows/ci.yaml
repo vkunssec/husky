@@ -45,28 +45,29 @@ jobs:
 
   code_coverage:
     name: "Code coverage report"
-    if: github.event_name == 'pull_request' # Do not run when workflow is triggered by push to main branch
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-    needs: unit_tests # Depends on the artifact uploaded by the "unit_tests" job
+    needs: unit_tests
     permissions:
       contents: read
-      actions: read # to download code coverage results from "test" job
-      pull-requests: write # write permission needed to comment on PR
+      actions: read
+      pull-requests: write
     steps:
-      - uses: fgrosse/go-coverage-report@v1.1.1 # Consider using a Git revision for maximum security
-        with:
-          coverage-artifact-name: "code-coverage" # can be omitted if you used this default value
-          coverage-file-name: "coverage.txt" # can be omitted if you used this default value
-          fail-on-error: false # do not fail the workflow if the coverage is not 100%
+      # Primeiro, precisamos fazer checkout do código
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Download and verify artifact
-        run: |
-          mkdir -p coverage
-          cd coverage
-          echo "Trying to download artifact..."
-          gh api \
-            -H "Accept: application/vnd.github+json" \
-            /repos/${{ github.repository }}/actions/artifacts \
-            | jq '.'
+      # Baixar o artefato de cobertura
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: code-coverage
+          
+      # Usar a action de cobertura
+      - uses: fgrosse/go-coverage-report@v1.1.1
+        with:
+          coverage-artifact-name: "code-coverage"
+          coverage-file-name: "coverage.txt"
+          fail-on-error: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
