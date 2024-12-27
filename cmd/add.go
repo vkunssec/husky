@@ -21,7 +21,7 @@ var addCmd = &cobra.Command{
 			return
 		}
 
-		if err := lib.Install(); err != nil {
+		if err := lib.Install(lib.InstallOptions{Quiet: quiet}); err != nil {
 			tools.LogError("❌ Error installing hooks: %v\n", err)
 			return
 		}
@@ -31,5 +31,6 @@ var addCmd = &cobra.Command{
 }
 
 func init() {
+	addCmd.Flags().BoolVarP(&quiet, "quiet", "q", false, "Silent mode")
 	rootCmd.AddCommand(addCmd)
 }

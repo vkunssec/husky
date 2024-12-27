@@ -24,6 +24,12 @@ To start using Husky in your project:
 husky init
 ```
 
+To force initialization in an existing project:
+
+```bash
+husky init --force
+```
+
 This command will:
 - Configure the basic hook structure
 - Prepare the Git environment

@@ -29,6 +29,11 @@ This command will:
 			Config:    lib.NewDefaultConfig(),
 			Templates: lib.LoadTemplates(),
 			Force:     force,
+			Quiet:     quiet,
+		}
+
+		optsInstall := lib.InstallOptions{
+			Quiet: quiet,
 		}
 
 		if err := lib.Init(opts); err != nil {
@@ -36,7 +41,7 @@ This command will:
 			return
 		}
 
-		if err := lib.Install(); err != nil {
+		if err := lib.Install(optsInstall); err != nil {
 			tools.LogError("❌ Error installing hooks: %v\n", err)
 			return
 		}

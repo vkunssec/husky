@@ -16,15 +16,22 @@ This command will:
 - Install the configured hooks
 - Configure the git scripts`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := lib.Install(); err != nil {
+		opts := lib.InstallOptions{
+			Quiet: quiet,
+		}
+
+		if err := lib.Install(opts); err != nil {
 			tools.LogError("❌ Error installing Husky: %v\n", err)
 			return
 		}
 
-		tools.LogInfo("✅ Husky installed successfully!")
+		if !quiet {
+			tools.LogInfo("✅ Husky installed successfully!")
+		}
 	},
 }
 
 func init() {
+	installCmd.Flags().BoolVarP(&quiet, "quiet", "q", false, "Silent mode")
 	rootCmd.AddCommand(installCmd)
 }

@@ -14,6 +14,7 @@ type InitOptions struct {
 	Config    *HuskyConfig             // Husky configuration
 	Templates map[string]*HookTemplate // Hook templates
 	Force     bool                     // Force initialization
+	Quiet     bool                     // Quiet mode
 }
 
 // Init initializes husky
@@ -35,7 +36,10 @@ func Init(opts InitOptions) error {
 		return fmt.Errorf("failed to install default hooks: %w", err)
 	}
 
-	tools.LogInfo("Husky initialized successfully")
+	if !opts.Quiet {
+		tools.LogInfo("Husky initialized successfully")
+	}
+
 	return nil
 }
 

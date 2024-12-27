@@ -8,9 +8,15 @@ import (
 	"github.com/vkunssec/husky/internal/tools"
 )
 
+type InstallOptions struct {
+	Quiet bool // Quiet mode
+}
+
 // Install installs husky git hooks by copying them from husky hooks directory to git hooks directory
-func Install() error {
-	tools.LogInfo("Installing husky")
+func Install(opts InstallOptions) error {
+	if !opts.Quiet {
+		tools.LogInfo("Installing husky")
+	}
 
 	// Check if git is installed in the system
 	if !tools.GitExists() {
@@ -62,7 +68,9 @@ func Install() error {
 			continue
 		}
 
-		tools.LogInfo(hook)
+		if !opts.Quiet {
+			tools.LogInfo(hook)
+		}
 
 		// Create a hard link from husky hook to git hooks directory
 		err = os.Link(hook, filepath.Join(gitHooksDir, filepath.Base(hook)))
@@ -76,7 +84,10 @@ func Install() error {
 			return err
 		}
 	}
-	tools.LogInfo("Hooks installed")
+
+	if !opts.Quiet {
+		tools.LogInfo("Hooks installed")
+	}
 
 	return nil
 }
