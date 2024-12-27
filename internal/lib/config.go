@@ -45,7 +45,7 @@ type HuskyConfig struct {
 
 func NewDefaultConfig() *HuskyConfig {
 	return &HuskyConfig{
-		DefaultPermissions: 0700,
+		DefaultPermissions: 0755,
 		HooksTemplatesDir:  "templates",
 		DefaultHooks: map[string]string{
 			"pre-commit":  defaultPreCommitTemplate,
