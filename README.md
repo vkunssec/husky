@@ -122,4 +122,3 @@ Contributions are welcome! Please feel free to submit pull requests.
 ## Author
 
 [Victor Martins](https://github.com/vkunssec)
-```

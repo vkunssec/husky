@@ -83,7 +83,7 @@ func GetGitHooksDir(relative bool) string {
 	return path.Join(cwd, ".git", "hooks")
 }
 
-// IsCI verifica se está rodando em um ambiente de CI
+// IsCI checks if the current environment is a CI environment
 func IsCI() bool {
 	ciEnvVars := []string{
 		"CI",
