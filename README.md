@@ -4,11 +4,9 @@ Husky is a Git hook manager that allows you to configure and manage your hooks i
 
 ## Features
 
-- Configuration via yaml/json file
 - Support for multiple hooks
 - Simple installation and usage
 - Compatible with all operating systems
-- Easy integration with CI/CD environments
 
 ## Installation
 
@@ -27,15 +25,8 @@ husky init
 ```
 
 This command will:
-- Create the husky.yaml configuration file
 - Configure the basic hook structure
 - Prepare the Git environment
-
-To force initialization in an existing project:
-
-```bash
-husky init --force
-```
 
 ### Adding Hooks
 
@@ -101,15 +92,6 @@ After initialization, Husky creates the following structure:
 └── .husky/
     └── hooks/          # Your custom hooks
 ```
-
-## CI/CD Environments
-
-Husky automatically detects popular CI/CD environments, including:
-- Travis CI
-- CircleCI
-- GitHub Actions
-- GitLab CI
-- Jenkins
 
 ## Contributing
 
