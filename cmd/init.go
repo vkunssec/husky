@@ -17,7 +17,6 @@ var initCmd = &cobra.Command{
 	Long: `Initialize husky in the current directory.
 	
 This command will:
-- Create the husky.yaml configuration file
 - Configure the basic hook structure
 - Prepare the git environment`,
 	Run: func(cmd *cobra.Command, args []string) {

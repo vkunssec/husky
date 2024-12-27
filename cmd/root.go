@@ -18,7 +18,6 @@ var (
 your hooks in a simple and efficient way.
 
 Main features:
-- Configuration via yaml/json file
 - Support for multiple hooks
 - Easy installation and usage
 - Compatible with all operating systems
