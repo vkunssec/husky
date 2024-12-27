@@ -32,7 +32,7 @@ func Init() error {
 	//goland:noinspection GoUnhandledErrorResult
 	defer file.Close()
 
-	_, err = file.WriteString(`#!/bin/sh\necho "husky installed"`)
+	_, err = file.WriteString(`#!/bin/sh`)
 	if err != nil {
 		return err
 	}
