@@ -37,3 +37,7 @@ func LogError(format string, args ...interface{}) {
 		fmt.Fprintf(os.Stderr, "ERROR: "+format+"\n", args...)
 	}
 }
+
+func LogUnformatted(format string, args ...interface{}) {
+	fmt.Printf(format, args...)
+}
