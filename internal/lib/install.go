@@ -4,7 +4,6 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 // Install installs husky git hooks by copying them from husky hooks directory to git hooks directory
@@ -25,14 +24,8 @@ func Install() error {
 	gitHooksDir := GetGitHooksDir(true)
 	huskyHooksDir := GetHuskyHooksDir(true)
 
-	// validate hook paths
-	err := validateHookPath(huskyHooksDir, gitHooksDir)
-	if err != nil {
-		return err
-	}
-
 	// Verify if husky hooks directory exists
-	_, err = os.Stat(huskyHooksDir)
+	_, err := os.Stat(huskyHooksDir)
 	if err != nil {
 		return err
 	}
@@ -82,31 +75,6 @@ func Install() error {
 		}
 	}
 	LogInfo("Hooks installed")
-
-	return nil
-}
-
-// validateHookPath validates the hook path and base directory
-func validateHookPath(hookPath string, baseDir string) error {
-	// resolve hook path to absolute path
-	absPath, err := filepath.Abs(hookPath)
-	if err != nil {
-		return err
-	}
-
-	// check if hook path is inside the base directory
-	if !strings.HasPrefix(absPath, baseDir) {
-		return errors.New("hook path outside of allowed directory")
-	}
-
-	// check if hook path is a symlink
-	fi, err := os.Lstat(hookPath)
-	if err != nil {
-		return err
-	}
-	if fi.Mode()&os.ModeSymlink != 0 {
-		return errors.New("symlinks not allowed")
-	}
 
 	return nil
 }
