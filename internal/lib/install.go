@@ -52,7 +52,7 @@ func Install() error {
 			continue
 		}
 
-		fmt.Print(hook)
+		fmt.Println(hook)
 
 		err = os.Link(hook, filepath.Join(gitHooksDir, filepath.Base(hook)))
 		if err != nil {

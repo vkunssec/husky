@@ -25,7 +25,6 @@ func Add(hook string, cmd string) error {
 
 	// check if .husky/hooks exists
 	_, err := os.Stat(GetHuskyHooksDir(true))
-	fmt.Println(err)
 	if os.IsNotExist(err) {
 		fmt.Println("no pre-existing hooks found")
 
