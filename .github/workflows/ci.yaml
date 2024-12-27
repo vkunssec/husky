@@ -58,3 +58,15 @@ jobs:
           coverage-artifact-name: "code-coverage" # can be omitted if you used this default value
           coverage-file-name: "coverage.txt" # can be omitted if you used this default value
           fail-on-error: false # do not fail the workflow if the coverage is not 100%
+
+      - name: Download and verify artifact
+        run: |
+          mkdir -p coverage
+          cd coverage
+          echo "Trying to download artifact..."
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/actions/artifacts \
+            | jq '.'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
