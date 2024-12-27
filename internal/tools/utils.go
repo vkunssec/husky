@@ -1,21 +1,51 @@
 package tools
 
 import (
+	"fmt"
 	"os"
 	"path"
 )
 
 // exported functions
 var (
-	IsValidHook      = isValidHook
-	GitExists        = gitExists
-	HuskyExists      = huskyExists
-	GetHuskyHooksDir = getHuskyHooksDir
-	GetGitHooksDir   = getGitHooksDir
-	IsCI             = isCI
+	IsValidHook               = isValidHook
+	GitExists                 = gitExists
+	HuskyExists               = huskyExists
+	GetHuskyHooksDir          = getHuskyHooksDir
+	GetGitHooksDir            = getGitHooksDir
+	IsCI                      = isCI
+	ValidHooks                = validHooks
+	ValidHooksWithDescription = validHooksWithDescription
+)
+
+const (
+	green = "\033[0;32m"
+	nc    = "\033[0m"
 )
 
 // internal functions
+var validHooksWithDescription = []string{
+	// Hooks de commit
+	fmt.Sprintf("%s[pre-commit]%s             Execute before commit", green, nc),
+	fmt.Sprintf("%s[prepare-commit-msg]%s     Execute before commit-msg", green, nc),
+	fmt.Sprintf("%s[commit-msg]%s             Execute before commit", green, nc),
+	fmt.Sprintf("%s[post-commit]%s            Execute after commit", green, nc),
+	fmt.Sprintf("%s[post-commit-msg]%s        Execute after commit-msg\n", green, nc),
+	fmt.Sprintf("%s[pre-merge]%s              Execute before merge", green, nc),
+	fmt.Sprintf("%s[pre-merge-commit]%s       Execute before merge-commit", green, nc),
+	fmt.Sprintf("%s[post-merge]%s             Execute after merge", green, nc),
+	fmt.Sprintf("%s[post-merge-commit]%s      Execute after merge-commit\n", green, nc),
+	fmt.Sprintf("%s[pre-rebase]%s             Execute before rebase", green, nc),
+	fmt.Sprintf("%s[pre-rebase-commit]%s      Execute before rebase-commit", green, nc),
+	fmt.Sprintf("%s[post-rebase]%s            Execute after rebase", green, nc),
+	fmt.Sprintf("%s[post-rebase-commit]%s     Execute after rebase-commit\n", green, nc),
+	fmt.Sprintf("%s[pre-push]%s               Execute before push", green, nc),
+	fmt.Sprintf("%s[update]%s                 Execute after push\n", green, nc),
+	fmt.Sprintf("%s[pre-applypatch]%s         Execute before applypatch", green, nc),
+	fmt.Sprintf("%s[post-applypatch]%s        Execute after applypatch\n", green, nc),
+	fmt.Sprintf("%s[post-checkout]%s          Execute after checkout", green, nc),
+}
+
 var validHooks = []string{
 	// Hooks de commit
 	"pre-commit",
@@ -112,3 +142,15 @@ func isCI() bool {
 	}
 	return false
 }
+
+const HuskyGolang = `
+  _    _                 _                 _____           _                         
+ | |  | |               | |               / ____|         | |                        
+ | |__| |  _   _   ___  | | __  _   _    | |  __    ___   | |   __ _   _ __     __ _ 
+ |  __  | | | | | / __| | |/ / | | | |   | | |_ |  / _ \  | |  / _  | | '_ \   / _  |
+ | |  | | | |_| | \__ \ |   <  | |_| |   | |__| | | (_) | | | | (_| | | | | | | (_| |
+ |_|  |_|  \__,_| |___/ |_|\_\  \__, |    \_____|  \___/  |_|  \__,_| |_| |_|  \__, |
+                                 __/ |                                          __/ |
+                                |___/                                          |___/ 
+
+`

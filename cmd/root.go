@@ -8,13 +8,13 @@ import (
 )
 
 var (
-	version = "1.0.2"
+	version = "1.1.0"
 
 	rootCmd = &cobra.Command{
 		Use:     "husky",
 		Version: version,
 		Short:   "Git hooks manager",
-		Long: `Husky is a Git hooks manager that allows you to configure and manage 
+		Long: tools.HuskyGolang + `Husky is a Git hooks manager that allows you to configure and manage 
 your hooks in a simple and efficient way.
 
 Main features:
@@ -33,6 +33,4 @@ func Execute() {
 	}
 }
 
-func init() {
-	rootCmd.PersistentFlags().BoolP("toggle", "t", false, "Help message for toggle")
-}
+func init() {}

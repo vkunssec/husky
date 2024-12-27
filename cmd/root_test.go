@@ -9,7 +9,7 @@ import (
 
 func TestRootCmd(t *testing.T) {
 	t.Run("should have correct version", func(t *testing.T) {
-		assert.Equal(t, "1.0.2", version)
+		assert.Equal(t, "1.1.0", version)
 	})
 
 	t.Run("should have correct command properties", func(t *testing.T) {
@@ -33,15 +33,5 @@ func TestExecute(t *testing.T) {
 
 		// Verify if there was no error (if there was, the program would have exited with os.Exit(1))
 		assert.NotPanics(t, func() { Execute() })
-	})
-}
-
-func TestInit(t *testing.T) {
-	t.Run("should have toggle flag", func(t *testing.T) {
-		flag := rootCmd.PersistentFlags().Lookup("toggle")
-		assert.NotNil(t, flag)
-		assert.Equal(t, "toggle", flag.Name)
-		assert.Equal(t, "t", flag.Shorthand)
-		assert.Equal(t, "false", flag.DefValue)
 	})
 }
