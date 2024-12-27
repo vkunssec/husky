@@ -1,4 +1,4 @@
-# Husky [![Go](https://github.com/vkunssec/husky/actions/workflows/go.yaml/badge.svg)](https://github.com/vkunssec/husky/actions/workflows/go.yaml)
+# Husky [![Go](https://github.com/vkunssec/husky/actions/workflows/go.yaml/badge.svg)](https://github.com/vkunssec/husky/actions/workflows/go.yaml) [![Coverage](https://github.com/vkunssec/husky/actions/workflows/ci.yaml/badge.svg)](https://github.com/vkunssec/husky/actions/workflows/ci.yaml)
 
 Husky is a Git hook manager that allows you to configure and manage your hooks in a simple and efficient way.
 
