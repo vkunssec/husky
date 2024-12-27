@@ -9,7 +9,7 @@ import (
 
 var (
 	rootCmd = &cobra.Command{
-		Use:   "mh",
+		Use:   "husky",
 		Short: "Git hooks manager",
 		Long:  "Git hooks manager. Manage your git hooks with ease. https://github.com/vkunssec/husky",
 	}
@@ -23,5 +23,5 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().BoolP("verbose", "v", false, "Verbose output")
+	rootCmd.PersistentFlags().BoolP("toggle", "t", false, "Help message for toggle")
 }

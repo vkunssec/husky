@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/vkunssec/husky/internal/lib"
 )
 
 var installCmd = &cobra.Command{
@@ -11,7 +12,10 @@ var installCmd = &cobra.Command{
 	Short: "Install husky",
 	Long:  "Install husky in the current directory",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("install called")
+		err := lib.Install()
+		if err != nil {
+			fmt.Println(err)
+		}
 	},
 }
 
