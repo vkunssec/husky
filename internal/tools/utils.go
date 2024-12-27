@@ -5,6 +5,17 @@ import (
 	"path"
 )
 
+// exported functions
+var (
+	IsValidHook      = isValidHook
+	GitExists        = gitExists
+	HuskyExists      = huskyExists
+	GetHuskyHooksDir = getHuskyHooksDir
+	GetGitHooksDir   = getGitHooksDir
+	IsCI             = isCI
+)
+
+// internal functions
 var validHooks = []string{
 	// Hooks de commit
 	"pre-commit",
@@ -38,7 +49,7 @@ var validHooks = []string{
 }
 
 // IsValidHook checks if the hook is valid
-func IsValidHook(hook string) bool {
+func isValidHook(hook string) bool {
 	for _, h := range validHooks {
 		if h == hook {
 			return true
@@ -48,19 +59,19 @@ func IsValidHook(hook string) bool {
 }
 
 // GitExists checks if .git is installed
-func GitExists() bool {
+func gitExists() bool {
 	_, err := os.Stat(".git")
 	return err == nil
 }
 
 // HuskyExists checks if .husky is installed
-func HuskyExists() bool {
+func huskyExists() bool {
 	_, err := os.Stat(".husky")
 	return err == nil
 }
 
 // GetHuskyHooksDir returns the path to the husky hooks directory
-func GetHuskyHooksDir(relative bool) string {
+func getHuskyHooksDir(relative bool) string {
 	if relative {
 		return path.Join(".husky", "hooks")
 	}
@@ -72,7 +83,7 @@ func GetHuskyHooksDir(relative bool) string {
 }
 
 // GetGitHooksDir returns the path to the git hooks directory
-func GetGitHooksDir(relative bool) string {
+func getGitHooksDir(relative bool) string {
 	if relative {
 		return path.Join(".git", "hooks")
 	}
@@ -84,7 +95,7 @@ func GetGitHooksDir(relative bool) string {
 }
 
 // IsCI checks if the current environment is a CI environment
-func IsCI() bool {
+func isCI() bool {
 	ciEnvVars := []string{
 		"CI",
 		"TRAVIS",
