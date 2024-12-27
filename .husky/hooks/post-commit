@@ -1,0 +1,5 @@
+#!/bin/sh
+# Husky post-commit hook
+set -e
+
+# Add your post-commit commands here

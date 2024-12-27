@@ -1,0 +1,5 @@
+#!/bin/sh
+# Husky pre-push hook
+set -e
+
+# Add your pre-push commands here

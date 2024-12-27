@@ -1,0 +1,11 @@
+#!/bin/sh
+# Husky pre-commit hook
+set -e
+
+# Validate that we're in a Git repository
+if [ ! -d .git ]; then
+    echo "Error: not a git repository"
+    exit 1
+fi
+
+# Add your pre-commit commands here
