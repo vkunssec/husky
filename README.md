@@ -51,6 +51,8 @@ Example:
 husky add pre-commit 'go test ./...'
 ```
 
+See the [examples](examples) folder for more examples of implemented hooks.
+
 ### Supported Hooks
 
 - Commit Hooks
