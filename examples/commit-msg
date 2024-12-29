@@ -1,0 +1,64 @@
+#!/bin/sh
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+NC='\033[0m' # No Color
+
+# Log functions
+log() {
+    echo -e "${GREEN}[Commit-MSG]${NC} $1"
+}
+
+warn() {
+    echo -e "${YELLOW}[Commit-MSG]${NC} $1"
+}
+
+error() {
+    echo -e "${RED}[Commit-MSG]${NC} $1"
+}
+
+# Main function to verify the commit
+main() {
+    # Get the commit message from the file passed as an argument
+    commit_msg=$(cat "$1")
+    
+    # Conventional Commits pattern
+    pattern='^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|temp)(\([a-z0-9-]+\))?: .+'
+    
+    if [ -z "$commit_msg" ]; then
+        error "Empty commit message"
+        exit 1
+    fi
+    
+    if ! echo "$commit_msg" | grep -qE "$pattern"; then
+        error "The commit message does not follow the Conventional Commits pattern
+
+    Expected format: <type>[optional scope]: <description>
+    Allowed types:
+        - feat:               New feature
+        - fix:                Bug fix
+        - docs:               Documentation
+        - style:              Formatting, missing comma, etc
+        - refactor:           Code refactoring
+        - test:               Tests
+        - chore:              Build, configs, etc
+        - perf:               Performance improvements
+        - ci:                 CI changes
+        - build:              Build system or dependencies
+        - temp:               Temporary changes
+
+    Exemplos:
+        - feat(auth): add JWT authentication
+        - fix: fix value calculation
+    "
+        exit 1
+    fi
+    
+    log "Valid commit message!"
+}
+
+# Execute the verification
+main "$1"

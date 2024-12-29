@@ -1,0 +1,59 @@
+#!/bin/sh
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Auxiliary functions
+log() {
+    echo -e "${GREEN}[Pre-commit]${NC} $1"
+}
+
+warn() {
+    echo -e "${YELLOW}[Pre-commit]${NC} $1"
+}
+
+error() {
+    echo -e "${RED}[Pre-commit]${NC} $1"
+}
+
+# Function to execute commands with feedback
+run_command() {
+    local cmd="$1"
+    local msg="$2"
+    
+    log "Executing $msg..."
+    if ! eval "$cmd"; then
+        error "Failed to execute $msg"
+        exit 1
+    fi
+}
+
+# Verify if there are staged changes
+check_staged_changes() {
+    if git diff --cached --quiet; then
+        warn "No changes to commit"
+        exit 0
+    fi
+}
+
+# Main function
+main() {
+    log "Starting pre-commit hook"
+
+    # Verify staged changes
+    check_staged_changes
+
+    # Execute Go commands
+    run_command "go mod tidy" "go mod tidy"
+    run_command "go fmt ./..." "go fmt"
+    run_command "go vet ./..." "go vet"
+
+    log "Pre-commit finished successfully!"
+}
+
+# Execute the script
+main "$@"

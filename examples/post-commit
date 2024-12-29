@@ -1,0 +1,126 @@
+#!/bin/sh
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Auxiliary functions
+log() {
+    echo -e "${GREEN}[Post-commit]${NC} $1"
+}
+
+warn() {
+    echo -e "${YELLOW}[Post-commit]${NC} $1"
+}
+
+error() {
+    echo -e "${RED}[Post-commit]${NC} $1"
+}
+
+is_docs_commit() {
+    [[ "$(git log -1 --pretty=%B)" == "docs: update docs" ]]
+}
+
+has_docs_changes() {
+    # Verify if there are changes in the docs/ folder (including unstaged files)
+    if git diff --quiet docs/ && [ -z "$(git ls-files --others --exclude-standard docs/)" ]; then
+        return 1
+    fi
+    return 0
+}
+
+validate_git_repo() {
+    if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        error "Not in a git repository"
+        exit 1
+    fi
+}
+
+commit_changes() {
+    local msg="$1"
+    local files="$2"
+    
+    # Save the list of files that were staged originally
+    local staged_files=$(git diff --name-only --cached -- $files)
+    
+    # Verify if there are files to add
+    if [ -z "$staged_files" ]; then
+        warn "No changes to commit in: $files"
+        return 0
+    fi
+    
+    # Add only the files that were staged originally
+    if ! git add $staged_files; then
+        error "Failed to add files: $staged_files"
+        return 1
+    fi
+    
+    # Add more details to the commit error
+    if ! git commit -m "$msg" 2>/tmp/git_error; then
+        error "Failed to create commit: $msg"
+        error "Error details: $(cat /tmp/git_error)"
+        return 1
+    fi
+    
+    return 0
+}
+
+# Main function
+main() {
+    validate_git_repo
+
+    if [ -n "$SKIP_POST_COMMIT" ]; then
+        warn "Skipping recursive execution"
+        exit 0
+    fi
+
+    log "Starting hook"
+
+    if is_docs_commit; then
+        warn "Skipping documentation commit"
+        exit 0
+    fi
+
+    if ! has_docs_changes; then
+        log "No documentation changes"
+        exit 0
+    fi
+
+    # Preparation
+    ORIGINAL_COMMIT_MSG=$(git log -1 --pretty=%B)
+    log "Processing commit: $ORIGINAL_COMMIT_MSG"
+
+    # Main execution with error handling
+    {
+        export SKIP_POST_COMMIT=1
+        
+        log "Resetting commits..."
+        git reset --soft HEAD^
+        git reset HEAD docs/
+        
+        log "Creating original commit..."
+        if ! commit_changes "$ORIGINAL_COMMIT_MSG" "."; then
+            error "Failed to create original commit"
+            exit 1
+        fi
+        
+        log "Creating documentation commit..."
+        if ! commit_changes "docs: update docs" "docs/"; then
+            error "Failed to create documentation commit"
+            exit 1
+        fi
+        
+        log "Commits created successfully!"
+    } || {
+        error "Error during commit process"
+        error "Executing git reset --hard HEAD^ to revert changes"
+        git reset --hard HEAD^
+        exit 1
+    }
+}
+
+# Execute the script
+main "$@"
