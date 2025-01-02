@@ -34,10 +34,14 @@ run_command() {
 
 # Verify if there are staged changes
 check_staged_changes() {
-    if git diff --cached --quiet; then
-        warn "No changes to commit"
-        exit 0
+    local staged_files=$(git diff --cached --name-only)
+    
+    if [ -z "$staged_files" ]; then
+        warn "No changes detected for commit"
+        return 1
     fi
+    
+    return 0
 }
 
 # Function to check if changes are only in docs directory
@@ -63,7 +67,9 @@ main() {
     log "Starting pre-commit hook"
 
     # Verify staged changes
-    check_staged_changes
+    if ! check_staged_changes; then
+        exit 0
+    fi
 
     # Check if changes are only in docs directory
     check_docs_only

@@ -20,18 +20,20 @@ error() {
     echo -e "${RED}[Post-commit]${NC} $1"
 }
 
+# Function to check if the commit is a documentation commit
 is_docs_commit() {
     [[ "$(git log -1 --pretty=%B)" == "docs: update docs" ]]
 }
 
+# Verify if there are changes in the docs/ folder (including unstaged files)
 has_docs_changes() {
-    # Verify if there are changes in the docs/ folder (including unstaged files)
     if git diff --quiet docs/ && [ -z "$(git ls-files --others --exclude-standard docs/)" ]; then
         return 1
     fi
     return 0
 }
 
+# Validate if the current directory is a git repository
 validate_git_repo() {
     if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
         error "Not in a git repository"
@@ -39,6 +41,7 @@ validate_git_repo() {
     fi
 }
 
+# Function to commit changes
 commit_changes() {
     local msg="$1"
     local files="$2"
@@ -64,13 +67,23 @@ commit_changes() {
         return 1
     fi
     
-    # Add more details to the commit error
-    if ! git commit -m "$msg" 2>/tmp/git_error; then
-        error "Failed to create commit: $msg"
-        error "Error details: $(cat /tmp/git_error)"
-        return 1
+    # Create the commit
+    if [[ "$msg" == "docs: update docs" ]]; then
+        if ! git commit -m "$msg" --no-verify; then
+            error "Failed to create docs commit"
+            git status
+            return 1
+        fi
+    else
+        # Create the regular commit
+        if ! git commit -m "$msg"; then
+            error "Failed to create regular commit"
+            git status
+            return 1
+        fi
     fi
     
+    log "Commit created successfully: $msg"
     return 0
 }
 
@@ -83,7 +96,7 @@ main() {
         exit 0
     fi
 
-    log "Starting hook"
+    log "Starting post-commit hook"
 
     if is_docs_commit; then
         warn "Skipping documentation commit"
@@ -102,16 +115,19 @@ main() {
     # Main execution with error handling
     {
         export SKIP_POST_COMMIT=1
-        
-        log "Resetting commits..."
+
+        git stash push docs/
+
         git reset --soft HEAD^
-        git reset HEAD docs/
         
         log "Creating original commit..."
         if ! commit_changes "$ORIGINAL_COMMIT_MSG" "."; then
             error "Failed to create original commit"
+            git stash pop
             exit 1
         fi
+        
+        git stash pop
         
         log "Creating documentation commit..."
         if ! commit_changes "docs: update docs" "docs/"; then
@@ -124,6 +140,7 @@ main() {
         error "Error during commit process"
         error "Executing git reset --hard HEAD^ to revert changes"
         git reset --hard HEAD^
+        git stash pop 2>/dev/null || true
         exit 1
     }
 }
