@@ -40,12 +40,33 @@ check_staged_changes() {
     fi
 }
 
+# Function to check if changes are only in docs directory
+check_docs_only() {
+    local files=$(git diff --cached --name-only)
+    local non_docs=0
+    
+    for file in $files; do
+        if [[ ! $file =~ ^docs/ ]]; then
+            non_docs=1
+            break
+        fi
+    done
+
+    if [ $non_docs -eq 0 ] && [ -n "$files" ]; then
+        warn "Changes only in docs directory, skipping pre-commit"
+        exit 0
+    fi
+}
+
 # Main function
 main() {
     log "Starting pre-commit hook"
 
     # Verify staged changes
     check_staged_changes
+
+    # Check if changes are only in docs directory
+    check_docs_only
 
     # Execute Go commands
     run_command "go mod tidy" "go mod tidy"

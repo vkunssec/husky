@@ -43,18 +43,24 @@ commit_changes() {
     local msg="$1"
     local files="$2"
     
-    # Save the list of files that were staged originally
-    local staged_files=$(git diff --name-only --cached -- $files)
+    # Verify all modified files in the specified directory
+    local staged_files=$(git diff --name-only HEAD -- $files)
+    
+    # Also verify untracked files
+    local untracked_files=$(git ls-files --others --exclude-standard -- $files)
+    
+    # Combine both types of files
+    local all_files="$staged_files $untracked_files"
     
     # Verify if there are files to add
-    if [ -z "$staged_files" ]; then
+    if [ -z "$all_files" ]; then
         warn "No changes to commit in: $files"
         return 0
     fi
     
-    # Add only the files that were staged originally
-    if ! git add $staged_files; then
-        error "Failed to add files: $staged_files"
+    # Add all files in the specified directory
+    if ! git add "$files"; then
+        error "Failed to add files in: $files"
         return 1
     fi
     
